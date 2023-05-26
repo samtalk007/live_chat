@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Chat</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      padding: 20px;
+    }
+
+    .chat-container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    #messages {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #messages li {
+      margin-bottom: 10px;
+    }
+
+    .message-input {
+      width: 100%;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container chat-container">
+    <h2 class="text-center">Live Chat By Sam</h2>
+    <ul id="messages"></ul>
+    <div class="input-group">
+      <input id="message-input" type="text" class="form-control" placeholder="Type your message...">
+      <div class="input-group-append">
+        <button id="send-button" class="btn btn-primary">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    document.getElementById('send-button').addEventListener('click', () => {
+      const messageInput = document.getElementById('message-input');
+      const message = messageInput.value;
+      socket.emit('chat message', message);
+      messageInput.value = '';
+    });
+
+    socket.on('chat message', (msg) => {
+      const messages = document.getElementById('messages');
+      const li = document.createElement('li');
+      li.textContent = msg;
+      messages.appendChild(li);
+    });
+  </script>
+</body>
+</html>
